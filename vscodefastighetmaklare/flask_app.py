@@ -37,7 +37,9 @@ def skapa_app():
     # 2. KONFIGURATION (Applikationsinställningar)
     # ============================================================
     # SECRET_KEY: Nödvändig för att skydda session cookies (inloggning). BYT DENNA I PRODUKTION!
-    app.config['SECRET_KEY'] = 'din_superhemliga_nyckel'
+    # Använd miljövariabel för produktion (PythonAnywhere)
+    import os
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'din_superhemliga_nyckel')
     # SQLALCHEMY_DATABASE_URI: Anger vilken databas vi ska använda (en SQLite-fil).
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///blgeestates.db'
     # SQLALCHEMY_TRACK_MODIFICATIONS: Stängs av för att spara resurser (bäst praxis).
