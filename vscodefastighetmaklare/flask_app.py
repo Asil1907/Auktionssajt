@@ -78,14 +78,14 @@ def registrera_blueprints(app):
     """
     # Importera blueprint-objekten från deras respektive moduler
     from myblueprints.bostader import bostader_bp
-    from myblueprints.auctions import auctions_bp
+    # from myblueprints.auctions import auctions_bp  # Kommenterad tills auctions är implementerat
     #imporetera fler blueprint om det behövs
 
 
     # app.register_blueprint: Den faktiska kopplingen sker här.
     # url_prefix: Anger det prefix som alla routes i blueprintet kommer att ha.
     app.register_blueprint(bostader_bp, url_prefix='/bostader')
-    app.register_blueprint(auctions_bp, url_prefix='/auctions')
+    # app.register_blueprint(auctions_bp, url_prefix='/auctions')  # Kommenterad tills auctions är implementerat
     #registera fler blueprint om det behövs
 
 

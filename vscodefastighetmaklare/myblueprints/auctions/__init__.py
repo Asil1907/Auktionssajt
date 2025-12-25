@@ -9,5 +9,5 @@ auctions_bp = Blueprint('auctions', __name__,
                        url_prefix='/auctions',
                        template_folder='templates')
 
-# Importera routes
-from . import auctions_routes
+# TODO: Importera routes när de är skapade
+# from . import auctions_routes
