@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ auction.title }}</h2>
+
+<p>{{ auction.description }}</p>
+
+<p>
+<strong>Startbud:</strong> {{ auction.starting_bid }} kr<br>
+<strong>Auktionen slutar:</strong> {{ auction.end_datetime }}
+</p>
+
+<p>
+👍 {{ auction.likes }}
+<a class="btn" href="/auction/{{ auction.id }}/like">Like</a>
+&nbsp;
+👎 {{ auction.dislikes }}
+<a class="btn" href="/auction/{{ auction.id }}/dislike">Dislike</a>
+</p>
+
+<p>
+<strong>Antal bud:</strong> {{ bid_count }}<br>
+<strong>Högsta bud:</strong>
+{% if highest_bid %}
+    {{ highest_bid }} kr
+{% else %}
+    Inga bud ännu
+{% endif %}
+</p>
+
+<hr>
+
+<h3>Lägg bud</h3>
+<form method="post" action="/auction/{{ auction.id }}/bid">
+    <input name="bidder" placeholder="Din e-post" required>
+    <input name="amount" type="number" step="0.01" required>
+    <button type="submit">Lägg bud</button>
+</form>
+
+<h3>Två högsta bud</h3>
+<ul>
+{% for bid in bids %}
+    <li>
+        {{ bid.bidder }} –
+        {{ bid.amount }} kr
+        ({{ bid.created_at }})
+    </li>
+{% endfor %}
+</ul>
+
+<a href="/">← Tillbaka</a>
+{% endblock %}

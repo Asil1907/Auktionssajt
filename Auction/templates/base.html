@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <title>Auction</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<header>
+    <h1><a href="/">🛒 Auktioner</a></h1>
+</header>
+
+<main>
+    {% for msg in get_flashed_messages() %}
+      <div class="flash">{{ msg }}</div>
+    {% endfor %}
+
+    {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

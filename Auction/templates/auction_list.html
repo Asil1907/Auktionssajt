@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Alla auktioner</h2>
+
+<form method="get" action="/">
+    <input name="q" placeholder="Sök auktion" value="{{ keyword or '' }}">
+    <button type="submit">Sök</button>
+    <a class="btn" href="/admin/create">➕ Ny auktion</a>
+</form>
+
+{% for auction in auctions %}
+<div class="auction-card">
+    <div>
+        <h3>{{ auction.title }}</h3>
+        <div class="auction-meta">
+            👍 {{ auction.likes }} | 👎 {{ auction.dislikes }}
+        </div>
+    </div>
+
+    <div>
+        <a class="btn" href="/auction/{{ auction.id }}">Visa</a>
+        <a class="btn btn-danger"
+           href="/admin/delete/{{ auction.id }}"
+           onclick="return confirm('Ta bort auktion?')">
+           Ta bort
+        </a>
+    </div>
+</div>
+{% else %}
+<p>Inga auktioner hittades.</p>
+{% endfor %}
+{% endblock %}

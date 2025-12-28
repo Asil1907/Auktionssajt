@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Skapa ny auktion</h2>
+
+<form method="post">
+    <input name="title" placeholder="Titel" required><br><br>
+
+    <textarea name="description" placeholder="Beskrivning" required></textarea><br><br>
+
+    <input name="starting_bid" type="number" step="0.01"
+           placeholder="Startbud" required><br><br>
+
+    <input name="end_datetime" type="datetime-local" required><br><br>
+
+    <button type="submit">Skapa auktion</button>
+</form>
+
+<a href="/">← Tillbaka</a>
+{% endblock %}

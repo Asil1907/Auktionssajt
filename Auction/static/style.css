@@ -1,0 +1,77 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background: #1e293b;
+    color: white;
+    padding: 1rem 2rem;
+}
+
+header a {
+    color: white;
+    text-decoration: none;
+}
+
+main {
+    padding: 2rem;
+    max-width: 900px;
+    margin: auto;
+}
+
+.flash {
+    background: #d1fae5;
+    border: 1px solid #10b981;
+    padding: 10px;
+    margin-bottom: 1rem;
+}
+
+/* Auktion-lista */
+.auction-card {
+    background: white;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.auction-card h3 {
+    margin: 0;
+}
+
+.auction-meta {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Knappar */
+button, .btn {
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover, .btn:hover {
+    background: #1d4ed8;
+}
+
+.btn-danger {
+    background: #dc2626;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+}
+
+input {
+    padding: 8px;
+    margin-right: 5px;
+}
