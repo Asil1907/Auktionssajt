@@ -6,23 +6,35 @@ body {
 }
 
 header {
-    background: #1e293b;
+    background: #269257;
     color: white;
     padding: 1rem 2rem;
 }
 
+header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
 header a {
-    color: white;
+    color: rgb(224, 217, 217);
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
 }
+
+header a:hover {
+    opacity: 0.9;
+}
+
 header img {
-    height: 60px;
-    width: 60px;
+    height: 100px;
+    width: 120px;
     object-fit: cover;
-    border-radius: 50%;
+    border-radius: 8px;
 }
 
 main {
