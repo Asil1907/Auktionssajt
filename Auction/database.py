@@ -18,5 +18,12 @@ def init_db(app):
     app.teardown_appcontext(close_db)
     with app.app_context():
         db = get_db()
-        with open("schema.sql", encoding="utf-8") as f:
-            db.executescript(f.read())
+        # Kontrollera om tabellerna redan finns
+        tables = db.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name='auctions'"
+        ).fetchone()
+        
+        # Kör bara schema.sql om tabellerna inte finns
+        if not tables:
+            with open("schema.sql", encoding="utf-8") as f:
+                db.executescript(f.read())
