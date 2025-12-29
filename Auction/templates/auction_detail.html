@@ -6,7 +6,7 @@
 <p>{{ auction.description }}</p>
 
 <p>
-<strong>Startbud:</strong> {{ auction.starting_bid }} kr<br>
+<strong>Startbud:</strong> {{ auction.starting_bid|int }} kr<br>
 <strong>Auktionen slutar:</strong> {{ auction.end_datetime }}
 </p>
 
@@ -22,7 +22,7 @@
 <strong>Antal bud:</strong> {{ bid_count }}<br>
 <strong>Högsta bud:</strong>
 {% if highest_bid %}
-    {{ highest_bid }} kr
+    {{ highest_bid|int }} kr
 {% else %}
     Inga bud ännu
 {% endif %}
@@ -33,20 +33,24 @@
 <h3>Lägg bud</h3>
 <form method="post" action="/auction/{{ auction.id }}/bid">
     <input name="bidder" placeholder="Din e-post" required>
-    <input name="amount" type="number" step="0.01" required>
+    <input name="amount" type="number" step="1" min="1" placeholder="Belopp (kr)" required>
     <button type="submit">Lägg bud</button>
 </form>
 
 <h3>Två högsta bud</h3>
+{% if bids %}
 <ul>
 {% for bid in bids %}
     <li>
-        {{ bid.bidder }} –
-        {{ bid.amount }} kr
-        ({{ bid.created_at }})
+        <strong>{{ bid.bidder }}</strong> –
+        <strong>{{ bid.amount|int }} kr</strong>
+        <span style="color: #666;">({{ bid.created_at[:19] }})</span>
     </li>
 {% endfor %}
 </ul>
+{% else %}
+<p>Inga bud ännu. Var först med att lägga ett bud!</p>
+{% endif %}
 
 <a href="/">← Tillbaka</a>
 {% endblock %}

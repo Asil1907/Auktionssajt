@@ -7,15 +7,20 @@ auctions_bp = Blueprint("auctions", __name__)
 @auctions_bp.route("/")
 def index():
     keyword = request.args.get("q")
+    show_all = request.args.get("show_all")
+    
     if keyword:
         auctions = AuctionRepository.search(keyword)
-    else:
+    elif show_all:
         auctions = AuctionRepository.get_all()
+    else:
+        auctions = AuctionRepository.get_active()
 
     return render_template(
         "auction_list.html",
         auctions=auctions,
-        keyword=keyword
+        keyword=keyword,
+        show_all=show_all
     )
 
 @auctions_bp.route("/auction/<int:id>")

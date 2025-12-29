@@ -1,12 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Alla auktioner</h2>
+<h2>{% if show_all %}Alla auktioner{% else %}Pågående auktioner{% endif %}</h2>
 
 <form method="get" action="/">
     <input name="q" placeholder="Sök auktion" value="{{ keyword or '' }}">
     <button type="submit">Sök</button>
-    <a class="btn" href="/admin/create">➕ Ny auktion</a>
+    {% if show_all %}
+        <a class="btn" href="/">Visa endast pågående</a>
+    {% else %}
+        <a class="btn" href="/?show_all=1">Visa alla</a>
+    {% endif %}
+    <a class="btn" href="/admin/create">Ny auktion</a>
 </form>
 
 {% for auction in auctions %}
@@ -14,6 +19,7 @@
     <div>
         <h3>{{ auction.title }}</h3>
         <div class="auction-meta">
+            Slutar: {{ auction.end_datetime }} | Startbud: {{ auction.starting_bid|int }} kr<br>
             👍 {{ auction.likes }} | 👎 {{ auction.dislikes }}
         </div>
     </div>

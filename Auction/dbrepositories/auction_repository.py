@@ -9,6 +9,16 @@ class AuctionRepository:
         ).fetchall()
 
     @staticmethod
+    def get_active():
+        return get_db().execute(
+            """
+            SELECT * FROM auctions
+            WHERE datetime(end_datetime) > datetime('now')
+            ORDER BY end_datetime ASC
+            """
+        ).fetchall()
+
+    @staticmethod
     def get_by_id(auction_id):
         return get_db().execute(
             "SELECT * FROM auctions WHERE id = ?",
