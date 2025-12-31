@@ -8,6 +8,13 @@
 
     <textarea name="description" placeholder="Beskrivning" required></textarea><br><br>
 
+    <label for="category"><strong>Kategori:</strong></label><br>
+    <select name="category" id="category" required style="padding: 8px; margin-bottom: 15px; width: 100%;">
+        {% for cat in categories %}
+        <option value="{{ cat }}">{{ cat }}</option>
+        {% endfor %}
+    </select><br><br>
+
     <input name="starting_bid" type="number" step="1" min="1"
            placeholder="Startbud (kr)" required><br><br>
 

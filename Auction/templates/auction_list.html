@@ -3,8 +3,9 @@
 {% block content %}
 <h2>{% if show_all %}Alla auktioner{% else %}Pågående auktioner{% endif %}</h2>
 
-<form method="get" action="/">
-    <input name="q" placeholder="Sök auktion" value="{{ keyword or '' }}">
+<!-- Sökformulär -->
+<form method="get" action="/" style="margin-bottom: 20px;">
+    <input name="q" placeholder="Sök auktion" value="{{ keyword or '' }}" style="padding: 8px; margin-right: 5px;">
     <button type="submit">Sök</button>
     {% if show_all %}
         <a class="btn" href="/">Visa endast pågående</a>
@@ -13,6 +14,33 @@
     {% endif %}
     <a class="btn" href="/admin/create">Ny auktion</a>
 </form>
+
+<!-- Filterformulär -->
+<div style="background: #fff; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+    <h3 style="margin-top: 0;">Filtrera auktioner</h3>
+    <form method="get" action="/">
+        <label for="category"><strong>Kategori:</strong></label>
+        <select name="category" id="category" style="padding: 8px; margin-right: 10px;">
+            <option value="">Alla kategorier</option>
+            {% for cat in categories %}
+            <option value="{{ cat }}" {% if selected_category == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+        </select>
+        
+        <label for="min_price"><strong>Min pris:</strong></label>
+        <input type="number" name="min_price" id="min_price" placeholder="0" value="{{ min_price or '' }}" style="width: 100px; padding: 8px; margin-right: 10px;">
+        
+        <label for="max_price"><strong>Max pris:</strong></label>
+        <input type="number" name="max_price" id="max_price" placeholder="Obegränsat" value="{{ max_price or '' }}" style="width: 100px; padding: 8px; margin-right: 10px;">
+        
+        {% if show_all %}
+        <input type="hidden" name="show_all" value="1">
+        {% endif %}
+        
+        <button type="submit">Filtrera</button>
+        <a href="/" class="btn">Rensa filter</a>
+    </form>
+</div>
 
 {% for auction in auctions %}
 <div class="auction-card">

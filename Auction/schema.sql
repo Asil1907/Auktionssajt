@@ -7,6 +7,7 @@ CREATE TABLE auctions (
     description TEXT NOT NULL,
     starting_bid REAL NOT NULL,
     end_datetime TEXT NOT NULL,
+    category TEXT DEFAULT 'Övrigt',
     likes INTEGER DEFAULT 0,
     dislikes INTEGER DEFAULT 0
 );

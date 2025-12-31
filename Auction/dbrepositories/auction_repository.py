@@ -37,14 +37,14 @@ class AuctionRepository:
         ).fetchall()
 
     @staticmethod
-    def create(title, description, starting_bid, end_datetime):
+    def create(title, description, starting_bid, end_datetime, category='Övrigt'):
         db = get_db()
         db.execute(
             """
-            INSERT INTO auctions (title, description, starting_bid, end_datetime)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO auctions (title, description, starting_bid, end_datetime, category)
+            VALUES (?, ?, ?, ?, ?)
             """,
-            (title, description, starting_bid, end_datetime)
+            (title, description, starting_bid, end_datetime, category)
         )
         db.commit()
 
@@ -74,3 +74,40 @@ class AuctionRepository:
             (auction_id,)
         )
         db.commit()
+
+    @staticmethod
+    def get_all_categories():
+        """Hämta alla unika kategorier"""
+        result = get_db().execute(
+            "SELECT DISTINCT category FROM auctions WHERE category IS NOT NULL ORDER BY category"
+        ).fetchall()
+        return [row['category'] for row in result]
+
+    @staticmethod
+    def filter_auctions(category=None, min_price=None, max_price=None, show_all=False):
+        """Filtrera auktioner efter kategori och prisintervall"""
+        query = "SELECT * FROM auctions WHERE 1=1"
+        params = []
+        
+        # Filtrera endast pågående om inte show_all
+        if not show_all:
+            query += " AND datetime(end_datetime) > datetime('now')"
+        
+        # Filtrera efter kategori
+        if category and category != 'Alla':
+            query += " AND category = ?"
+            params.append(category)
+        
+        # Filtrera efter min pris
+        if min_price:
+            query += " AND starting_bid >= ?"
+            params.append(min_price)
+        
+        # Filtrera efter max pris
+        if max_price:
+            query += " AND starting_bid <= ?"
+            params.append(max_price)
+        
+        query += " ORDER BY end_datetime ASC"
+        
+        return get_db().execute(query, params).fetchall()
