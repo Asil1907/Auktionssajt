@@ -1,27 +1,46 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Skapa ny auktion</h2>
+<div class="detail-section">
+    <h2 style="color: #b1e6e6; margin-top: 0;">Skapa ny auktion</h2>
 
-<form method="post">
-    <input name="title" placeholder="Titel" required><br><br>
+    <form method="post" style="display: flex; flex-direction: column; gap: 20px;">
+        <div>
+            <label for="title"><strong>Titel:</strong></label><br>
+            <input name="title" id="title" placeholder="T.ex. iPhone 13 Pro" required style="width: 100%;">
+        </div>
 
-    <textarea name="description" placeholder="Beskrivning" required></textarea><br><br>
+        <div>
+            <label for="description"><strong>Beskrivning:</strong></label><br>
+            <textarea name="description" id="description" placeholder="Beskriv produkten i detalj..." required></textarea>
+        </div>
 
-    <label for="category"><strong>Kategori:</strong></label><br>
-    <select name="category" id="category" required style="padding: 8px; margin-bottom: 15px; width: 100%;">
-        {% for cat in categories %}
-        <option value="{{ cat }}">{{ cat }}</option>
-        {% endfor %}
-    </select><br><br>
+        <div>
+            <label for="category"><strong>Kategori:</strong></label><br>
+            <select name="category" id="category" required style="width: 100%;">
+                {% for cat in categories %}
+                <option value="{{ cat }}">{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <input name="starting_bid" type="number" step="1" min="1"
-           placeholder="Startbud (kr)" required><br><br>
+        <div style="display: flex; gap: 20px;">
+            <div style="flex: 1;">
+                <label for="starting_bid"><strong>Startbud (kr):</strong></label><br>
+                <input name="starting_bid" id="starting_bid" type="number" step="1" min="1"
+                       placeholder="100" required style="width: 100%;">
+            </div>
 
-    <input name="end_datetime" type="datetime-local" required><br><br>
+            <div style="flex: 1;">
+                <label for="end_datetime"><strong>Slutdatum och tid:</strong></label><br>
+                <input name="end_datetime" id="end_datetime" type="datetime-local" required style="width: 100%;">
+            </div>
+        </div>
 
-    <button type="submit">Skapa auktion</button>
-</form>
-
-<a href="/">← Tillbaka</a>
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn-success">✅ Skapa auktion</button>
+            <a href="/" class="btn">❌ Avbryt</a>
+        </div>
+    </form>
+</div>
 {% endblock %}

@@ -1,56 +1,81 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{ auction.title }}</h2>
+<div class="detail-section">
+    <h2 style="color: #1e3a8a; margin-top: 0;">{{ auction.title }}</h2>
+    
+    <p style="background: #f3f4f6; padding: 10px; border-radius: 8px; border-left: 4px solid #3b82f6;">
+        <strong>Kategori:</strong> {{ auction.category or 'Övrigt' }}
+    </p>
+    
+    <p style="font-size: 1.1rem; line-height: 1.6;">{{ auction.description }}</p>
 
-<p>{{ auction.description }}</p>
+    <div style="background: #eff6ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
+        <p style="margin: 5px 0;"><strong>💰 Startbud:</strong> {{ auction.starting_bid|int }} kr</p>
+        <p style="margin: 5px 0;"><strong>⏰ Auktionen slutar:</strong> {{ auction.end_datetime }}</p>
+        <p style="margin: 5px 0;"><strong>📊 Antal bud:</strong> {{ bid_count }}</p>
+        <p style="margin: 5px 0;"><strong>🏆 Högsta bud:</strong>
+        {% if highest_bid %}
+            {{ highest_bid|int }} kr
+        {% else %}
+            Inga bud ännu
+        {% endif %}
+        </p>
+    </div>
 
-<p>
-<strong>Startbud:</strong> {{ auction.starting_bid|int }} kr<br>
-<strong>Auktionen slutar:</strong> {{ auction.end_datetime }}
-</p>
+    <div style="display: flex; gap: 15px; margin: 20px 0;">
+        <div style="flex: 1; text-align: center; background: #d1fae5; padding: 15px; border-radius: 8px;">
+            <div style="font-size: 2rem;">👍</div>
+            <div style="font-size: 1.5rem; font-weight: bold;">{{ auction.likes }}</div>
+            <a class="btn btn-success" href="/auction/{{ auction.id }}/like">Gilla</a>
+        </div>
+        <div style="flex: 1; text-align: center; background: #fee2e2; padding: 15px; border-radius: 8px;">
+            <div style="font-size: 2rem;">👎</div>
+            <div style="font-size: 1.5rem; font-weight: bold;">{{ auction.dislikes }}</div>
+            <a class="btn btn-danger" href="/auction/{{ auction.id }}/dislike">Ogilla</a>
+        </div>
+    </div>
+</div>
 
-<p>
-👍 {{ auction.likes }}
-<a class="btn" href="/auction/{{ auction.id }}/like">Like</a>
-&nbsp;
-👎 {{ auction.dislikes }}
-<a class="btn" href="/auction/{{ auction.id }}/dislike">Dislike</a>
-</p>
+<div class="detail-section">
+    <h3>💳 Lägg bud</h3>
+    <form method="post" action="/auction/{{ auction.id }}/bid" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end;">
+        <div style="flex: 1; min-width: 200px;">
+            <label for="bidder">E-post:</label><br>
+            <input name="bidder" id="bidder" type="email" placeholder="din@email.se" required style="width: 100%;">
+        </div>
+        <div style="flex: 1; min-width: 150px;">
+            <label for="amount">Belopp (kr):</label><br>
+            <input name="amount" id="amount" type="number" step="1" min="1" placeholder="Belopp" required style="width: 100%;">
+        </div>
+        <button type="submit">🚀 Lägg bud</button>
+    </form>
+</div>
 
-<p>
-<strong>Antal bud:</strong> {{ bid_count }}<br>
-<strong>Högsta bud:</strong>
-{% if highest_bid %}
-    {{ highest_bid|int }} kr
-{% else %}
-    Inga bud ännu
-{% endif %}
-</p>
+<div class="detail-section">
+    <h3>🏅 Två högsta bud</h3>
+    {% if bids %}
+    <ul class="bid-list">
+    {% for bid in bids %}
+        <li>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <strong style="color: #1e3a8a;">📧 {{ bid.bidder }}</strong>
+                </div>
+                <div style="text-align: right;">
+                    <strong style="color: #059669; font-size: 1.2rem;">{{ bid.amount|int }} kr</strong><br>
+                    <span style="color: #666; font-size: 0.9rem;">🕐 {{ bid.created_at[:19] }}</span>
+                </div>
+            </div>
+        </li>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p style="text-align: center; padding: 20px; background: #fef3c7; border-radius: 8px;">
+        💡 Inga bud ännu. Var först med att lägga ett bud!
+    </p>
+    {% endif %}
+</div>
 
-<hr>
-
-<h3>Lägg bud</h3>
-<form method="post" action="/auction/{{ auction.id }}/bid">
-    <input name="bidder" placeholder="Din e-post" required>
-    <input name="amount" type="number" step="1" min="1" placeholder="Belopp (kr)" required>
-    <button type="submit">Lägg bud</button>
-</form>
-
-<h3>Två högsta bud</h3>
-{% if bids %}
-<ul>
-{% for bid in bids %}
-    <li>
-        <strong>{{ bid.bidder }}</strong> –
-        <strong>{{ bid.amount|int }} kr</strong>
-        <span style="color: #666;">({{ bid.created_at[:19] }})</span>
-    </li>
-{% endfor %}
-</ul>
-{% else %}
-<p>Inga bud ännu. Var först med att lägga ett bud!</p>
-{% endif %}
-
-<a href="/">← Tillbaka</a>
+<a href="/" class="btn">← Tillbaka till alla auktioner</a>
 {% endblock %}
