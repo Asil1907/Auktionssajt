@@ -1,8 +1,19 @@
-from flask import Blueprint, render_template, request, redirect, flash
+from flask import Blueprint, render_template, request, redirect, flash, session
+from functools import wraps
 from dbrepositories.auction_repository import AuctionRepository
 from dbrepositories.bid_repository import BidRepository
 
 auctions_bp = Blueprint("auctions", __name__)
+
+# Decorator för att kräva inloggning
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('logged_in'):
+            flash('Du måste logga in för att komma åt den här sidan.')
+            return redirect('/login')
+        return f(*args, **kwargs)
+    return decorated_function
 
 @auctions_bp.route("/")
 def index():
@@ -49,7 +60,7 @@ def index():
 @auctions_bp.route("/auction/<int:id>")
 def detail(id):
     auction = AuctionRepository.get_by_id(id)
-    bids = BidRepository.get_top_two(id)
+    bids = BidRepository.get_all_for_auction(id)
     bid_count = BidRepository.count_for_auction(id)
     highest_bid = BidRepository.get_highest(id)
 
@@ -79,9 +90,41 @@ def dislike(id):
     AuctionRepository.dislike(id)
     return redirect(f"/auction/{id}")
 
+@auctions_bp.route("/completed")
+def completed():
+    """Visa avslutade auktioner med bud"""
+    auctions = AuctionRepository.get_completed_with_bids()
+    return render_template("completed_auctions.html", auctions=auctions)
+
+# -------- LOGIN/LOGOUT --------
+
+@auctions_bp.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        
+        # Enkel autentisering (byt till databas i produktion)
+        if username == "admin" and password == "admin123":
+            session['logged_in'] = True
+            session['username'] = username
+            flash("Du är nu inloggad!")
+            return redirect("/")
+        else:
+            flash("Fel användarnamn eller lösenord")
+    
+    return render_template("login.html")
+
+@auctions_bp.route("/logout")
+def logout():
+    session.clear()
+    flash("Du är nu utloggad")
+    return redirect("/")
+
 # -------- ADMIN --------
 
 @auctions_bp.route("/admin/create", methods=["GET", "POST"])
+@login_required
 def admin_create():
     categories = ["Elektronik", "Fordon", "Hem & Trädgård", "Kläder & Accessoarer", "Sport & Fritid", "Samlarprylar", "Övrigt"]
     
@@ -98,8 +141,36 @@ def admin_create():
     return render_template("admin_create.html", categories=categories)
 
 @auctions_bp.route("/admin/delete/<int:id>")
+@login_required
 def admin_delete(id):
     AuctionRepository.delete(id)
+    flash("Auktion borttagen!")
     return redirect("/")
 
+@auctions_bp.route("/admin/edit/<int:id>", methods=["GET", "POST"])
+@login_required
+def admin_edit(id):
+    categories = ["Elektronik", "Fordon", "Hem & Trädgård", "Kläder & Accessoarer", "Sport & Fritid", "Samlarprylar", "Övrigt"]
+    
+    if request.method == "POST":
+        AuctionRepository.update(
+            id,
+            request.form["title"],
+            request.form["description"],
+            request.form["starting_bid"],
+            request.form["end_datetime"],
+            request.form.get("category", "Övrigt")
+        )
+        flash("Auktion uppdaterad!")
+        return redirect(f"/auction/{id}")
+    
+    # GET - visa formulär med befintliga värden
+    auction = AuctionRepository.get_by_id(id)
+    return render_template("admin_edit.html", auction=auction, categories=categories)
 
+@auctions_bp.route("/admin/bid/delete/<int:bid_id>/<int:auction_id>")
+@login_required
+def admin_delete_bid(bid_id, auction_id):
+    BidRepository.delete(bid_id)
+    flash("Bud borttaget!")
+    return redirect(f"/auction/{auction_id}")

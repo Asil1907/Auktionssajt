@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="detail-section" style="max-width: 500px; margin: 50px auto;">
+    <h2 style="color: #1e3a8a; text-align: center; margin-top: 0;">🔐 Admin-inloggning</h2>
+
+    <form method="post" style="display: flex; flex-direction: column; gap: 20px;">
+        <div>
+            <label for="username"><strong>Användarnamn:</strong></label><br>
+            <input name="username" id="username" type="text" placeholder="admin" required style="width: 100%;">
+        </div>
+
+        <div>
+            <label for="password"><strong>Lösenord:</strong></label><br>
+            <input name="password" id="password" type="password" placeholder="••••••••" required style="width: 100%;">
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn-success" style="flex: 1;">🔓 Logga in</button>
+            <a href="/" class="btn" style="flex: 1; text-align: center;">❌ Avbryt</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

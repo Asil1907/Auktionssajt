@@ -8,7 +8,22 @@
 <body>
 
 <header>
-    <h1><a href="/"><img src="/static/Profil.jpg" alt="Logo"> Auktioner</a></h1>
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h1><a href="/"><img src="/static/Profil.jpg" alt="Logo"> Auktioner</a></h1>
+        
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="/completed" class="btn" style="padding: 8px 15px; font-size: 0.9rem;">✅ Avslutade</a>
+            {% if session.get('logged_in') %}
+                <span style="background: rgba(255, 255, 255, 0.2); padding: 8px 15px; border-radius: 8px;">
+                    👤 {{ session.get('username') }}
+                </span>
+                <a href="/admin/create" class="btn-success" style="padding: 8px 15px; font-size: 0.9rem;">➕ Ny auktion</a>
+                <a href="/logout" class="btn-danger" style="padding: 8px 15px; font-size: 0.9rem;">🚪 Logga ut</a>
+            {% else %}
+                <a href="/login" class="btn" style="padding: 8px 15px; font-size: 0.9rem;">🔐 Admin-inloggning</a>
+            {% endif %}
+        </div>
+    </div>
 </header>
 
 <main>

@@ -53,7 +53,7 @@
 </div>
 
 <div class="detail-section">
-    <h3>🏅 Två högsta bud</h3>
+    <h3>🏅 Alla bud</h3>
     {% if bids %}
     <ul class="bid-list">
     {% for bid in bids %}
@@ -62,9 +62,19 @@
                 <div>
                     <strong style="color: #1e3a8a;">📧 {{ bid.bidder }}</strong>
                 </div>
-                <div style="text-align: right;">
-                    <strong style="color: #059669; font-size: 1.2rem;">{{ bid.amount|int }} kr</strong><br>
-                    <span style="color: #666; font-size: 0.9rem;">🕐 {{ bid.created_at[:19] }}</span>
+                <div style="text-align: right; display: flex; align-items: center; gap: 15px;">
+                    <div>
+                        <strong style="color: #059669; font-size: 1.2rem;">{{ bid.amount|int }} kr</strong><br>
+                        <span style="color: #666; font-size: 0.9rem;">🕐 {{ bid.created_at[:19] }}</span>
+                    </div>
+                    {% if session.get('logged_in') %}
+                    <a href="/admin/bid/delete/{{ bid.id }}/{{ auction.id }}" 
+                       class="btn-danger" 
+                       style="padding: 5px 10px; font-size: 0.9rem;"
+                       onclick="return confirm('Är du säker på att du vill ta bort detta bud?');">
+                        🗑️ Ta bort
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </li>
@@ -77,5 +87,15 @@
     {% endif %}
 </div>
 
-<a href="/" class="btn">← Tillbaka till alla auktioner</a>
+<div style="display: flex; gap: 10px; margin: 20px 0;">
+    <a href="/" class="btn">← Tillbaka till alla auktioner</a>
+    {% if session.get('logged_in') %}
+    <a href="/admin/edit/{{ auction.id }}" class="btn-success">✏️ Redigera auktion</a>
+    <a href="/admin/delete/{{ auction.id }}" 
+       class="btn-danger" 
+       onclick="return confirm('Är du säker på att du vill ta bort denna auktion?');">
+        🗑️ Ta bort auktion
+    </a>
+    {% endif %}
+</div>
 {% endblock %}

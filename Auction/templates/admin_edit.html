@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="detail-section">
+    <h2 style="color: #b1e6e6; margin-top: 0;">Redigera auktion</h2>
+
+    <form method="post" style="display: flex; flex-direction: column; gap: 20px;">
+        <div>
+            <label for="title"><strong>Titel:</strong></label><br>
+            <input name="title" id="title" value="{{ auction.title }}" required style="width: 100%;">
+        </div>
+
+        <div>
+            <label for="description"><strong>Beskrivning:</strong></label><br>
+            <textarea name="description" id="description" required>{{ auction.description }}</textarea>
+        </div>
+
+        <div>
+            <label for="category"><strong>Kategori:</strong></label><br>
+            <select name="category" id="category" required style="width: 100%;">
+                {% for cat in categories %}
+                <option value="{{ cat }}" {% if cat == auction.category %}selected{% endif %}>{{ cat }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display: flex; gap: 20px;">
+            <div style="flex: 1;">
+                <label for="starting_bid"><strong>Startbud (kr):</strong></label><br>
+                <input name="starting_bid" id="starting_bid" type="number" step="1" min="1"
+                       value="{{ auction.starting_bid }}" required style="width: 100%;">
+            </div>
+
+            <div style="flex: 1;">
+                <label for="end_datetime"><strong>Slutdatum och tid:</strong></label><br>
+                <input name="end_datetime" id="end_datetime" type="datetime-local" 
+                       value="{{ auction.end_datetime[:16] }}" required style="width: 100%;">
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <button type="submit" class="btn-success">💾 Spara ändringar</button>
+            <a href="/auction/{{ auction.id }}" class="btn">❌ Avbryt</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

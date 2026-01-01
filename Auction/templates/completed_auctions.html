@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 style="color: white; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); margin-bottom: 25px;">
+    ✅ Avslutade auktioner med bud
+</h2>
+
+<div style="margin-bottom: 20px;">
+    <a href="/" class="btn">← Tillbaka till pågående auktioner</a>
+</div>
+
+{% if auctions %}
+{% for auction in auctions %}
+<div class="auction-card">
+    <div style="flex: 1;">
+        <h3>{{ auction.title }}</h3>
+        <div class="auction-meta">
+            <strong>📦 Kategori:</strong> {{ auction.category or 'Övrigt' }}<br>
+            <strong>💰 Startbud:</strong> {{ auction.starting_bid|int }} kr<br>
+            <strong>⏰ Avslutades:</strong> {{ auction.end_datetime }}<br>
+            <strong>👍</strong> {{ auction.likes }} &nbsp; <strong>👎</strong> {{ auction.dislikes }}
+        </div>
+    </div>
+    <div class="auction-actions">
+        <a class="btn" href="/auction/{{ auction.id }}">Visa detaljer</a>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<div class="detail-section" style="text-align: center; padding: 40px;">
+    <h3 style="color: #666;">📭 Inga avslutade auktioner med bud ännu</h3>
+    <p style="color: #999;">Auktioner som har fått bud och är avslutade kommer att visas här.</p>
+    <a href="/" class="btn" style="margin-top: 20px;">Se pågående auktioner</a>
+</div>
+{% endif %}
+{% endblock %}

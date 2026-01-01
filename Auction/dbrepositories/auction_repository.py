@@ -5,7 +5,11 @@ class AuctionRepository:
     @staticmethod
     def get_all():
         return get_db().execute(
-            "SELECT * FROM auctions ORDER BY id DESC"
+            """
+            SELECT * FROM auctions
+            WHERE datetime(end_datetime) > datetime('now')
+            ORDER BY id DESC
+            """
         ).fetchall()
 
     @staticmethod
@@ -15,6 +19,18 @@ class AuctionRepository:
             SELECT * FROM auctions
             WHERE datetime(end_datetime) > datetime('now')
             ORDER BY end_datetime ASC
+            """
+        ).fetchall()
+
+    @staticmethod
+    def get_completed_with_bids():
+        """Hämta avslutade auktioner som har bud"""
+        return get_db().execute(
+            """
+            SELECT a.* FROM auctions a
+            WHERE datetime(a.end_datetime) <= datetime('now')
+            AND EXISTS (SELECT 1 FROM bids WHERE auction_id = a.id)
+            ORDER BY a.end_datetime DESC
             """
         ).fetchall()
 
@@ -31,6 +47,7 @@ class AuctionRepository:
             """
             SELECT * FROM auctions
             WHERE title LIKE ?
+            AND datetime(end_datetime) > datetime('now')
             ORDER BY id DESC
             """,
             (f"%{keyword}%",)
@@ -54,6 +71,20 @@ class AuctionRepository:
         db.execute(
             "DELETE FROM auctions WHERE id = ?",
             (auction_id,)
+        )
+        db.commit()
+
+    @staticmethod
+    def update(auction_id, title, description, starting_bid, end_datetime, category):
+        """Uppdatera en befintlig auktion"""
+        db = get_db()
+        db.execute(
+            """
+            UPDATE auctions 
+            SET title = ?, description = ?, starting_bid = ?, end_datetime = ?, category = ?
+            WHERE id = ?
+            """,
+            (title, description, starting_bid, end_datetime, category, auction_id)
         )
         db.commit()
 

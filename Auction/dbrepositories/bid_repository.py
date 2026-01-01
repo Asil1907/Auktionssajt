@@ -49,5 +49,27 @@ class BidRepository:
             (auction_id,)
         ).fetchone()["highest"]
 
+    @staticmethod
+    def get_all_for_auction(auction_id):
+        """Hämta alla bud för en auktion"""
+        return get_db().execute(
+            """
+            SELECT * FROM bids
+            WHERE auction_id = ?
+            ORDER BY amount DESC, created_at DESC
+            """,
+            (auction_id,)
+        ).fetchall()
+
+    @staticmethod
+    def delete(bid_id):
+        """Ta bort ett bud"""
+        db = get_db()
+        db.execute(
+            "DELETE FROM bids WHERE id = ?",
+            (bid_id,)
+        )
+        db.commit()
+
     
     
