@@ -84,8 +84,8 @@ class AuctionRepository:
         return [row['category'] for row in result]
 
     @staticmethod
-    def filter_auctions(category=None, min_price=None, max_price=None, show_all=False):
-        """Filtrera auktioner efter kategori och prisintervall"""
+    def filter_auctions(category=None, min_price=None, max_price=None, end_time=None, show_all=False):
+        """Filtrera auktioner efter kategori, prisintervall och sluttid"""
         query = "SELECT * FROM auctions WHERE 1=1"
         params = []
         
@@ -107,6 +107,11 @@ class AuctionRepository:
         if max_price:
             query += " AND starting_bid <= ?"
             params.append(max_price)
+        
+        # Filtrera efter sluttid (inom X timmar)
+        if end_time:
+            query += " AND datetime(end_datetime) <= datetime('now', '+' || ? || ' hours')"
+            params.append(end_time)
         
         query += " ORDER BY end_datetime ASC"
         

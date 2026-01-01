@@ -41,6 +41,16 @@
             <input type="number" name="max_price" id="max_price" placeholder="∞" value="{{ max_price or '' }}" style="width: 120px;">
         </div>
         
+        <div>
+            <label for="end_time">Slutar inom:</label>
+            <select name="end_time" id="end_time">
+                <option value="">Alla</option>
+                <option value="24" {% if end_time == '24' %}selected{% endif %}>24 timmar</option>
+                <option value="48" {% if end_time == '48' %}selected{% endif %}>48 timmar</option>
+                <option value="168" {% if end_time == '168' %}selected{% endif %}>7 dagar</option>
+            </select>
+        </div>
+        
         {% if show_all %}
         <input type="hidden" name="show_all" value="1">
         {% endif %}

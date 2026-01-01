@@ -11,16 +11,18 @@ def index():
     category = request.args.get("category")
     min_price = request.args.get("min_price")
     max_price = request.args.get("max_price")
+    end_time = request.args.get("end_time")
     
     # Om sökord finns, sök
     if keyword:
         auctions = AuctionRepository.search(keyword)
     # Om filter finns, använd filter
-    elif category or min_price or max_price:
+    elif category or min_price or max_price or end_time:
         auctions = AuctionRepository.filter_auctions(
             category=category,
             min_price=int(min_price) if min_price else None,
             max_price=int(max_price) if max_price else None,
+            end_time=int(end_time) if end_time else None,
             show_all=bool(show_all)
         )
     # Annars visa alla eller pågående
@@ -40,7 +42,8 @@ def index():
         categories=categories,
         selected_category=category,
         min_price=min_price,
-        max_price=max_price
+        max_price=max_price,
+        end_time=end_time
     )
 
 @auctions_bp.route("/auction/<int:id>")
