@@ -6,15 +6,18 @@
 </h2>
 
 <!-- Sökformulär -->
-<div class="search-form">
-    <input name="q" type="text" placeholder="🔍 Sök auktion..." value="{{ keyword or '' }}">
-    <button type="submit">Sök</button>
-    {% if show_all %}
-        <a class="btn" href="/">Visa endast pågående</a>
-    {% else %}
-        <a class="btn btn-success" href="/?show_all=1">Visa alla</a>
-    {% endif %}
-</div>
+<form method="get" action="/">
+    <div class="search-form">
+        <input name="q" type="text" placeholder="🔍 Sök auktion..." value="{{ keyword or '' }}">
+        <button type="submit">Sök</button>
+        {% if show_all %}
+            <input type="hidden" name="show_all" value="1">
+            <a class="btn" href="/">Visa endast pågående</a>
+        {% else %}
+            <a class="btn btn-success" href="/?show_all=1">Visa alla</a>
+        {% endif %}
+    </div>
+</form>
 
 <!-- Filterformulär -->
 <div class="filter-box">
@@ -77,9 +80,6 @@
            href="/admin/delete/{{ auction.id }}"
            onclick="return confirm('Ta bort auktion?')">
            🗑 Ta bort
-        </a>
-    </div>
-</div>
         </a>
     </div>
 </div>
