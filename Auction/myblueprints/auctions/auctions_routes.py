@@ -44,6 +44,12 @@ def index():
     
     # Hämta alla kategorier för filter-dropdown
     categories = AuctionRepository.get_all_categories()
+    
+    # Hämta högsta bud för varje auktion
+    auction_bids = {}
+    for auction in auctions:
+        highest_bid = BidRepository.get_highest(auction['id'])
+        auction_bids[auction['id']] = highest_bid
 
     return render_template(
         "auction_list.html",
@@ -54,7 +60,8 @@ def index():
         selected_category=category,
         min_price=min_price,
         max_price=max_price,
-        end_time=end_time
+        end_time=end_time,
+        auction_bids=auction_bids
     )
 
 @auctions_bp.route("/auction/<int:id>")

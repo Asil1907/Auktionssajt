@@ -68,8 +68,13 @@
         <h3>{{ auction.title }}</h3>
         <div class="auction-meta">
             <strong>{{ auction.category or 'Övrigt' }}</strong> | 
-            ⏰ Slutar: {{ auction.end_datetime }} | 
-            💰 Startbud: {{ auction.starting_bid|int }} kr<br>
+            ⏰ Slutar: {{ auction.end_datetime }}<br>
+            💰 Startbud: {{ auction.starting_bid|int }} kr | 
+            {% if auction_bids[auction.id] %}
+                🔥 Aktuellt bud: {{ auction_bids[auction.id]|int }} kr
+            {% else %}
+                🔥 Inga bud ännu
+            {% endif %}<br>
             👍 {{ auction.likes }} | 👎 {{ auction.dislikes }}
         </div>
     </div>
